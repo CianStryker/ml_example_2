@@ -131,11 +131,32 @@ metrics(x_2, truth = dvote, estimate = pred_dvote) %>%
 ```
 
 ```{r}
+
+# This does the same things as the above.
+
 logistic_reg() %>%
   set_engine("glm") %>%
   fit(dvote ~ gender + party + state + office, data = clean) %>%
   predict(new_data = clean) %>%
   bind_cols(clean) %>%
-  metrics(truth = dvote, estimate = .pred_class)
+  metrics(truth = dvote, estimate = .pred_class) %>%
+  gt() %>% 
+    tab_header("Model 2 ver. 2.0 Evaluation on All Data")
+```
+
+```{r}
+x_split <- initial_split(clean, prop = 0.01)
+
+training_x <- training(x_split)
+testing_x <- testing(x_split)
+
+logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(dvote ~ gender + party + state + office, data = training_x) %>%
+  predict(new_data = training_x) %>%
+  bind_cols(training_x) %>%
+  metrics(truth = dvote, estimate = .pred_class) %>%
+  gt() %>% 
+    tab_header("Model 2 ver. 2.0 Evaluation on All Data")
 ```
 
