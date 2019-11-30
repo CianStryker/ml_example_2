@@ -157,6 +157,20 @@ logistic_reg() %>%
   bind_cols(training_x) %>%
   metrics(truth = dvote, estimate = .pred_class) %>%
   gt() %>% 
-    tab_header("Model 2 ver. 2.0 Evaluation on All Data")
+    tab_header("Model 2 ver. 3.0 Evaluation on Training Data")
+```
+
+```{r}
+
+set.seed(10)
+
+logistic_reg() %>%
+  set_engine("glm") %>%
+  fit(dvote ~ gender + party + state + office, data = training_x) %>%
+  predict(new_data = testing_x) %>%
+  bind_cols(testing_x) %>%
+  metrics(truth = dvote, estimate = .pred_class) %>%
+  gt() %>% 
+    tab_header("Model 2 ver. 3.1 Evaluation on Testing Data")
 ```
 
